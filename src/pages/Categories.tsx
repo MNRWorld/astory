@@ -21,8 +21,8 @@ const CategoriesPage = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const meta = await apiClient.get("podcasts.php", { action: "meta" });
-        setCategories(meta.categories || []);
+        const data = await apiClient.get("categories.php");
+        setCategories(data.map((c: any) => c.name) || []);
       } catch (error) {
         console.error("Error fetching categories:", error);
       } finally {

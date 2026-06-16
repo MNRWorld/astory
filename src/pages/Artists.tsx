@@ -21,8 +21,8 @@ const ArtistsPage = () => {
   useEffect(() => {
     const fetchArtists = async () => {
       try {
-        const meta = await apiClient.get("podcasts.php", { action: "meta" });
-        setArtists(meta.artists || []);
+        const data = await apiClient.get("artists.php");
+        setArtists(data.map((a: any) => a.name) || []);
       } catch (error) {
         console.error("Error fetching artists:", error);
       } finally {
