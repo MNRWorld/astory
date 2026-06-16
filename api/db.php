@@ -27,10 +27,10 @@ set_exception_handler(function($e) {
  * Get a PDO connection to the PostgreSQL database.
  */
 function getDbConnection() {
-    $dsn = "pgsql:host=" . DB_HOST . ";port=" . DB_PORT . ";dbname=" . DB_NAME . ";user=" . DB_USER . ";password=" . DB_PASS . ";sslmode=" . DB_SSLMODE;
+    $dsn = "pgsql:host=" . DB_HOST . ";port=" . DB_PORT . ";dbname=" . DB_NAME . ";sslmode=" . DB_SSLMODE;
     
     try {
-        $pdo = new PDO($dsn);
+        $pdo = new PDO($dsn, DB_USER, DB_PASS);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
         return $pdo;

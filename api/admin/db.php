@@ -2,8 +2,8 @@
 require_once 'config.php';
 
 try {
-    $dsn = "pgsql:host=" . DB_HOST . ";port=" . DB_PORT . ";dbname=" . DB_NAME . ";user=" . DB_USER . ";password=" . DB_PASS . ";sslmode=" . DB_SSLMODE;
-    $pdo = new PDO($dsn);
+    $dsn = "pgsql:host=" . DB_HOST . ";port=" . DB_PORT . ";dbname=" . DB_NAME . ";sslmode=" . DB_SSLMODE;
+    $pdo = new PDO($dsn, DB_USER, DB_PASS);
     
     // Set default fetch mode to associative array
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
