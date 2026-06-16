@@ -16,10 +16,10 @@ if (empty($code)) {
 }
 
 // 1. Exchange code for access token
-$token_url = getenv('MNR_ID_TOKEN_URL');
-$client_id = getenv('MNR_ID_CLIENT_ID');
-$client_secret = getenv('MNR_ID_CLIENT_SECRET');
-$redirect_uri = getenv('MNR_ID_REDIRECT_URI');
+$token_url = getEnvVar('MNR_ID_TOKEN_URL');
+$client_id = getEnvVar('MNR_ID_CLIENT_ID');
+$client_secret = getEnvVar('MNR_ID_CLIENT_SECRET');
+$redirect_uri = getEnvVar('MNR_ID_REDIRECT_URI');
 
 $ch = curl_init($token_url);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -44,7 +44,7 @@ $token_data = json_decode($response, true);
 $access_token = $token_data['access_token'];
 
 // 2. Fetch user profile
-$userinfo_url = getenv('MNR_ID_USERINFO_URL');
+$userinfo_url = getEnvVar('MNR_ID_USERINFO_URL');
 $ch = curl_init($userinfo_url);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_HTTPHEADER, [

@@ -37,10 +37,10 @@ if (empty($code)) {
 }
 
 // Load MNR ID configuration
-$base_url = getenv('VITE_MNR_ID_URL');
-$client_id = getenv('VITE_MNR_CLIENT_ID');
-$client_secret = getenv('VITE_MNR_CLIENT_SECRET');
-$redirect_uri = getenv('VITE_MNR_REDIRECT_URI');
+$base_url = getEnvVar('VITE_MNR_ID_URL');
+$client_id = getEnvVar('VITE_MNR_CLIENT_ID');
+$client_secret = getEnvVar('VITE_MNR_CLIENT_SECRET');
+$redirect_uri = getEnvVar('VITE_MNR_REDIRECT_URI');
 
 // Check if configuration exists
 if (empty($base_url) || empty($client_id) || empty($client_secret) || empty($redirect_uri)) {
