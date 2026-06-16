@@ -37,13 +37,25 @@ if (file_exists($envPath)) {
             $name = trim($name);
             $value = trim($value, " \t\n\r\0\x0B\"'"); // remove quotes and spaces
             
-            if (!isset($_ENV[$name])) {
-                $_ENV[$name] = $value;
+            // Check if it's already defined in the server environment
+            $serverVal = getenv($name);
+            if ($serverVal === false || $serverVal === '') {
+                if (!isset($_ENV[$name])) {
+                    $_ENV[$name] = $value;
+                }
+                if (!isset($_SERVER[$name])) {
+                    $_SERVER[$name] = $value;
+                }
+                @putenv("$name=$value");
+            } else {
+                // If it is already defined in getenv, make sure $_ENV and $_SERVER also have it
+                if (!isset($_ENV[$name])) {
+                    $_ENV[$name] = $serverVal;
+                }
+                if (!isset($_SERVER[$name])) {
+                    $_SERVER[$name] = $serverVal;
+                }
             }
-            if (!isset($_SERVER[$name])) {
-                $_SERVER[$name] = $value;
-            }
-            @putenv("$name=$value");
         }
     }
 }
