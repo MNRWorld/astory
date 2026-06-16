@@ -51,7 +51,6 @@ define('DB_NAME', getEnvVar('DB_NAME', 'your_database_name'));
 define('DB_USER', getEnvVar('DB_USER', 'your_database_user'));
 define('DB_PASS', getEnvVar('DB_PASS', 'your_database_password'));
 define('DB_PORT', getEnvVar('DB_PORT', '5432'));
-define('DB_SSLMODE', getEnvVar('DB_SSLMODE', 'disable'));
 
 // CORS configuration (Adjust for production)
 header("Access-Control-Allow-Origin: *");
