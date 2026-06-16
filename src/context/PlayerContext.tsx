@@ -999,7 +999,7 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
           artist: Array.isArray(currentTrack.artist)
             ? currentTrack.artist.join(", ")
             : currentTrack.artist,
-          album: "MNR Talk",
+          album: import.meta.env.VITE_APP_HEADER || "MNR Talk",
           artwork: [
             { src: coverArtUrl, sizes: "96x96", type: "image/png" },
             { src: coverArtUrl, sizes: "128x128", type: "image/png" },

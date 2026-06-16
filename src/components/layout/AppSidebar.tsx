@@ -93,7 +93,7 @@ export default function AppSidebar() {
               d="m2.14 50.25 68.58 118.16 19.42-11.26-47.23-81.41 72.2-0.16-14.84-25.57-98.12.22Z"
             />
           </svg>
-          <h1 className="font-headline text-xl font-bold">Talk</h1>
+          <h1 className="font-headline text-xl font-bold">{import.meta.env.VITE_APP_HEADER || "Talk"}</h1>
         </div>
       </SidebarHeader>
       <SidebarContent>

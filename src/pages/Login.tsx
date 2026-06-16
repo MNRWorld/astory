@@ -75,7 +75,7 @@ export default function LoginPage() {
           <div className="mb-4 flex items-center justify-center">
             <Music className="h-10 w-10 text-primary" />
           </div>
-          <CardTitle className="text-2xl">MNR Talk</CardTitle>
+          <CardTitle className="text-2xl">{import.meta.env.VITE_APP_HEADER || "MNR Talk"}</CardTitle>
           <CardDescription>
             দু:খিত, নতুন একাউন্ট তৈরির কোনো অপশন নেই। অনুগ্রহ করে আপনার গেস্ট একাউন্টই ব্যবহার চালিয়ে যান। জাযাকাল্লাহু খাইরান।
           </CardDescription>

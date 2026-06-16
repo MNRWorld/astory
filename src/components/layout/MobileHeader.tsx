@@ -61,7 +61,7 @@ export default function MobileHeader() {
               d="m2.14 50.25 68.58 118.16 19.42-11.26-47.23-81.41 72.2-0.16-14.84-25.57-98.12.22Z"
             />
           </svg>
-          <h1 className="text-xl font-bold font-headline">Talk</h1>
+          <h1 className="text-xl font-bold font-headline">{import.meta.env.VITE_APP_HEADER || "Talk"}</h1>
         </Link>
         <div className="flex items-center gap-1 rounded-full bg-transparent p-1">
           <DisclaimerDialog>
