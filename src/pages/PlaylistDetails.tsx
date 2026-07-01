@@ -37,6 +37,7 @@ import ResumePlayButton from "@/components/player/ResumePlayButton";
 import { usePodcast } from "@/context/PodcastContext";
 import { usePlaylist } from "@/context/PlaylistContext";
 import { apiClient } from "@/lib/api-client";
+import DraggablePlaylistGrid from "@/components/playlists/DraggablePlaylistGrid";
 
 const PODCASTS_PER_PAGE = 20;
 
@@ -49,6 +50,7 @@ const PlaylistPage = () => {
     toggleFavorite,
     removePodcastFromGuestPlaylist,
     removePodcastFromUserPlaylist,
+    reorderUserPlaylist,
   } = usePlaylist();
   const { fetchPodcasts } = usePodcast();
   const { toast } = useToast();
@@ -124,36 +126,17 @@ const PlaylistPage = () => {
     try {
       let data: any[];
       
-      // 🎯 All playlists: Load 20 at a time (pagination)
-      if (playlist.isPredefined || playlist.is_predefined) {
-        // Use podcasts.php with playlist_id filter for pagination
-        data = await fetchPodcasts({
-          action: "list",
-          playlist_id: playlist.id,
-          limit: PODCASTS_PER_PAGE,
-          offset: offsetToFetch,
-        });
-        
-        if (data.length < PODCASTS_PER_PAGE) {
-          setHasMore(false);
-        }
-      } else {
-        // User-created playlists: Use comma-separated IDs
-        const podcastIds = playlist.podcast_ids?.join(",") || "";
-        if (!podcastIds) {
-          setHasMore(false);
-          setIsLoading(false);
-          return;
-        }
-        data = await fetchPodcasts({
-          action: "list",
-          playlist_id: podcastIds,
-          limit: PODCASTS_PER_PAGE,
-          offset: offsetToFetch,
-        });
-        if (data.length < PODCASTS_PER_PAGE) {
-          setHasMore(false);
-        }
+      // All playlists now use the same path: pass the playlist UUID directly.
+      // podcasts.php JOINs against both admin_playlist_items and playlist_items.
+      data = await fetchPodcasts({
+        action: "list",
+        playlist_id: playlist.id,
+        limit: PODCASTS_PER_PAGE,
+        offset: offsetToFetch,
+      });
+      
+      if (data.length < PODCASTS_PER_PAGE) {
+        setHasMore(false);
       }
       setPodcasts(prev => offsetToFetch === 0 ? data : [...prev, ...data]);
     } catch (error) {
@@ -215,6 +198,9 @@ const PlaylistPage = () => {
       );
     }
     switch (sortOrder) {
+      case "custom":
+        // Keep backend sort_order from junction table — no client-side sort
+        break;
       case "a-z":
         result.sort((a, b) => a.title.localeCompare(b.title));
         break;
@@ -490,6 +476,7 @@ const PlaylistPage = () => {
                         <SelectValue placeholder="Sort by" />
                       </SelectTrigger>
                       <SelectContent>
+                        <SelectItem value="custom">Custom Order</SelectItem>
                         <SelectItem value="oldest">Oldest Added</SelectItem>
                         <SelectItem value="newest">Newest Added</SelectItem>
                         <SelectItem value="a-z">A-Z</SelectItem>
@@ -500,19 +487,30 @@ const PlaylistPage = () => {
                 </div>
                 {podcastsInPlaylist.length > 0 ? (
                   <>
-                    <div className="grid grid-cols-2 gap-4 pb-4 sm:grid-cols-3 md:grid-cols-4 md:pb-8 lg:grid-cols-5 xl:grid-cols-6">
-                      {podcastsInPlaylist.map((podcast) => (
-                        <PodcastCard
-                          key={podcast.id}
-                          podcast={podcast}
-                          playlist={podcastsInPlaylist}
-                          playlistId={playlist.id}
-                          onRemove={
-                            !isPredefined ? () => onRemove(podcast.id, playlist.id) : undefined
-                          }
-                        />
-                      ))}
-                    </div>
+                    {sortOrder === "custom" && !isPredefined ? (
+                      <DraggablePlaylistGrid
+                        podcasts={podcastsInPlaylist}
+                        playlistId={playlist.id}
+                        onRemove={
+                          !isPredefined ? (pid) => onRemove(pid, playlist.id) : undefined
+                        }
+                        onReorder={(orderedIds) => reorderUserPlaylist(playlist.id, orderedIds)}
+                      />
+                    ) : (
+                      <div className="grid grid-cols-2 gap-4 pb-4 sm:grid-cols-3 md:grid-cols-4 md:pb-8 lg:grid-cols-5 xl:grid-cols-6">
+                        {podcastsInPlaylist.map((podcast) => (
+                          <PodcastCard
+                            key={podcast.id}
+                            podcast={podcast}
+                            playlist={podcastsInPlaylist}
+                            playlistId={playlist.id}
+                            onRemove={
+                              !isPredefined ? () => onRemove(podcast.id, playlist.id) : undefined
+                            }
+                          />
+                        ))}
+                      </div>
+                    )}
 
                     {/* 🎯 Infinite Scroll Loader */}
                     <div ref={loaderRef} className="flex justify-center py-8">
